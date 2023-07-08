@@ -34,8 +34,8 @@
 #include <stdio.h>
 
 //#define ESP8266_WIFI_INFO		"AT+CWJAP=\"fuqi\",\"13755228725\"\r\n"   //wifi’À∫≈√‹¬Î
-#define ESP8266_WIFI_INFO		"AT+CWJAP=\"Xiaomi_E417\",\"703703703\"\r\n"
-
+//#define ESP8266_WIFI_INFO		"AT+CWJAP=\"Xiaomi_E417\",\"703703703\"\r\n"
+#define ESP8266_WIFI_INFO		"AT+CWJAP=\"CMCC-301\",\"20020612\"\r\n"
 #define ESP8266_ONENET_INFO		"AT+CIPSTART=\"TCP\",\"broker.emqx.io\",1883\r\n"
 
 

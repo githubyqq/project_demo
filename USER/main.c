@@ -11,6 +11,7 @@
 #include "exti.h"
 #include "esp8266.h"
 #include "onenet.h"
+#include "MPU6050.h"
 #include "wdg.h"
 #include <stdio.h>
 extern int rec_data[4];
@@ -24,6 +25,7 @@ const char *decSubtopic[] ={"yqq/sub"};//订阅主题   设备订阅命令
 const char decPubtopic[] = "yqq/pub";//发布消息   设备上行数据
 unsigned short timeCount = 0;	//发送间隔变量
 unsigned char *dataPtr = NULL;
+extern float Pitch,Roll,Yaw;
 int main(void)
 {	
 	delay_init();	    //延时函数初始化	  
@@ -40,8 +42,11 @@ int main(void)
 	Usart1_Init(115200);//debug串口
 	Usart2_Init(115200);//esp8266通信串口
 	TIM2_Int_Init(4999,7199);		//定时器2初始化
-	TIM3_Int_Init(2999,7199);		//定时器3初始化
-	IWDG_Init(7,3000);
+	TIM3_Int_Init(9999,719);		//定时器3初始化
+	IWDG_Init(7,4000);
+	IIC_Init();
+	MPU6050_initialize();     //=====MPU6050初始化	
+	DMP_Init();	
 	UsartPrintf(USART1,"hardware init is ok\n");
 	ESP8266_Init();			//esp8266初始化
 	OneNet_DevLink();
@@ -53,13 +58,13 @@ int main(void)
 	while(1)
 	{ 
 		IWDG_Feed();
-		UsartPrintf(USART_DEBUG,"dht11_flag_free:%d",dht11_flag_free);
+		//UsartPrintf(USART_DEBUG,"dht11_flag_free:%d",dht11_flag_free);
 			if(++timeCount == 40)		// 1000ms / 25ms  =40 意味着1秒执行一次
 			{
 				//读取温湿度传感器数据
 				DHT11_REC_Data(); 		
 				UsartPrintf(USART1,"humi:%d.%d  temp:%d.%d\n" ,rec_data[0],rec_data[1],rec_data[2],rec_data[3]);
-				
+				UsartPrintf(USART1,"X=%.1f \r Y=%.1f \r Z=%.1f\n",Pitch,Roll,Yaw);
 				LED_SW=GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9);
 				
 				//报警条件判断
@@ -78,9 +83,9 @@ int main(void)
 			if(num == 5)									//发送间隔5s
 			{
 				UsartPrintf(USART_DEBUG, "OneNet_Publish\r\n");
-				//sprintf(PUB_BUF,"{\"humi\":%d.%d,\"temp\":%d.%d,\"X\":%.2f,\"Y\":%.2f,\"Z\":%.2f,\"LED_SW\":%d,\"BEEP_SW\":%d}",rec_data[0],rec_data[1],rec_data[2],rec_data[3],pitch,roll,yaw,LED_SW,dht11_flag);
+				sprintf(PUB_BUF,"{\"humi\":%d.%d,\"temp\":%d.%d,\"X\":%.2f,\"Y\":%.2f,\"Z\":%.2f,\"LED_SW\":%d,\"BEEP_SW\":%d}",rec_data[0],rec_data[1],rec_data[2],rec_data[3],Pitch,Roll,Yaw,LED_SW,dht11_flag);
 
-				sprintf(PUB_BUF,"{\"humi\":%d.%d,\"temp\":%d.%d,\"LED_SW\":%d,\"BEEP_SW\":%d}",rec_data[0],rec_data[1],rec_data[2],rec_data[3],LED_SW,dht11_flag);
+				//sprintf(PUB_BUF,"{\"humi\":%d.%d,\"temp\":%d.%d,\"LED_SW\":%d,\"BEEP_SW\":%d}",rec_data[0],rec_data[1],rec_data[2],rec_data[3],LED_SW,dht11_flag);
 				OneNet_Publish(decPubtopic, PUB_BUF);
 				
 				num=0;

@@ -58,13 +58,14 @@ static void run_self_test(void)
     long gyro[3], accel[3];
 
     result = mpu_run_self_test(gyro, accel);
-    if (result == 0x7) {
+    if (result == 0x3) {
         /* Test passed. We can trust the gyro data here, so let's push it down
          * to the DMP.
          */
         float sens;
         unsigned short accel_sens;
         mpu_get_gyro_sens(&sens);
+				accel_sens = 0;
         gyro[0] = (long)(gyro[0] * sens);
         gyro[1] = (long)(gyro[1] * sens);
         gyro[2] = (long)(gyro[2] * sens);
@@ -258,30 +259,31 @@ void DMP_Init(void)
 { 
    u8 temp[1]={0};
    i2cRead(0x68,0x75,1,temp);
-	 UsartPrintf(USART1,"mpu_set_sensor complete ......\r\n");
+	 //UsartPrintf(USART1,"mpu_set_sensor complete ......\r\n");
 	if(temp[0]!=0x68)NVIC_SystemReset();
 	if(!mpu_init())
   {
 	  if(!mpu_set_sensors(INV_XYZ_GYRO | INV_XYZ_ACCEL))
-	  	UsartPrintf(USART1,"mpu_set_sensor complete ......\r\n");
+	  	//UsartPrintf(USART1,"mpu_set_sensor complete ......\r\n");
 	  if(!mpu_configure_fifo(INV_XYZ_GYRO | INV_XYZ_ACCEL))
-	  	 UsartPrintf(USART1,"mpu_configure_fifo complete ......\r\n");
+	  	 //UsartPrintf(USART1,"mpu_configure_fifo complete ......\r\n");
 	  if(!mpu_set_sample_rate(DEFAULT_MPU_HZ))
-	  	 UsartPrintf(USART1,"mpu_set_sample_rate complete ......\r\n");
+	  	 //UsartPrintf(USART1,"mpu_set_sample_rate complete ......\r\n");
 	  if(!dmp_load_motion_driver_firmware())
-	  	UsartPrintf(USART1,"dmp_load_motion_driver_firmware complete ......\r\n");
+	  	//UsartPrintf(USART1,"dmp_load_motion_driver_firmware complete ......\r\n");
 	  if(!dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_orientation)))
-	  	 UsartPrintf(USART1,"dmp_set_orientation complete ......\r\n");
+	  	 //UsartPrintf(USART1,"dmp_set_orientation complete ......\r\n");
 	  if(!dmp_enable_feature(DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP |
 	        DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |
 	        DMP_FEATURE_GYRO_CAL))
-	  	 UsartPrintf(USART1,"dmp_enable_feature complete ......\r\n");
+	  	 //UsartPrintf(USART1,"dmp_enable_feature complete ......\r\n");
 	  if(!dmp_set_fifo_rate(DEFAULT_MPU_HZ))
-	  	 UsartPrintf(USART1,"dmp_set_fifo_rate complete ......\r\n");
+	  	 //UsartPrintf(USART1,"dmp_set_fifo_rate complete ......\r\n");
 	  run_self_test();
 	  if(!mpu_set_dmp_state(1))
-	  	 UsartPrintf(USART1,"mpu_set_dmp_state complete ......\r\n");
-  }
+	  	 //UsartPrintf(USART1,"mpu_set_dmp_state complete ......\r\n");
+	;	
+	}
 }
 /**************************************************************************
 函数功能：读取MPU6050内置DMP的姿态信息

@@ -41,5 +41,10 @@
 ..\obj\main.o: ..\HARDWARE\EXTI\exti.h
 ..\obj\main.o: ..\HARDWARE\esp8266\esp8266.h
 ..\obj\main.o: ..\HARDWARE\onenet\onenet.h
+..\obj\main.o: ..\HARDWARE\MPU6050\MPU6050.h
+..\obj\main.o: ..\HARDWARE\MPU6050\IIC\IIC.h
+..\obj\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
+..\obj\main.o: ..\HARDWARE\MPU6050\DMP\inv_mpu.h
+..\obj\main.o: ..\HARDWARE\MPU6050\DMP\inv_mpu_dmp_motion_driver.h
 ..\obj\main.o: ..\HARDWARE\WDG\wdg.h
 ..\obj\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h

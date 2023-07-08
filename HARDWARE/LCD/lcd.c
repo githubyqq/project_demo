@@ -604,6 +604,17 @@ void base_chinese(void)
 		LCD_ShowChinese(64,80,16,16,WHITE);	//Ì¬
 		LCD_ShowChinese(80,80,4,16,WHITE);		//:
 		
+		LCD_ShowString(0,96,"X",WHITE);
+		LCD_ShowChinese(16,96,11,16,WHITE);//Öá
+		LCD_ShowChinese(32,96,4,16,WHITE);		//:
+		LCD_ShowString(0,112,"Y",WHITE);
+		LCD_ShowChinese(16,112,11,16,WHITE);//Öá
+		LCD_ShowChinese(32,112,4,16,WHITE);		//:
+		LCD_ShowString(0,128,"Z",WHITE);
+		LCD_ShowChinese(16,128,11,16,WHITE);//Öá
+		LCD_ShowChinese(32,128,4,16,WHITE);		//:
+		
+		
 }
 
 

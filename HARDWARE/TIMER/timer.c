@@ -9,7 +9,7 @@
 extern int rec_data[4];
 extern int dht11_flag;
 u8 string[10] = {0};	
-extern float Pitch,Roll,Yaw;
+float Pitch,Roll,Yaw;
 extern int LED_SW;
 void TIM2_Int_Init(u16 arr,u16 psc)
 {
@@ -42,14 +42,16 @@ void TIM2_IRQHandler(void)   //TIM2中断
 {
 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)  //检查TIM2更新中断发生与否
 		{
-			TIM_ClearITPendingBit(TIM2, TIM_IT_Update  );  //清除TIMx更新中断标志 
+			TIM_ClearITPendingBit(TIM2, TIM_IT_Update  );  //清除TIMx更新中断标志
 			LCD_ShowNum(48,32,rec_data[2],2,WHITE);
 			LCD_ShowNum(80,32,rec_data[3],1,WHITE);
 			LCD_ShowNum(48,48,rec_data[0],2,WHITE);
 			LCD_ShowNum(80,48,rec_data[1],1,WHITE);
 			LCD_ShowNum(96,64,dht11_flag,1,WHITE);
 			LCD_ShowNum(96,80,LED_SW,1,WHITE);
-			
+			LCD_ShowNum1(48,96,Pitch,4,WHITE);//X
+			LCD_ShowNum1(48,112,Roll,4,WHITE);//Y
+			LCD_ShowNum1(48,128,Yaw,4,WHITE);//Z
 		}
 }
 
@@ -87,7 +89,7 @@ void TIM3_IRQHandler(void)   //TIM3中断
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)  //检查TIM3更新中断发生与否
 		{
 			TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //清除TIMx更新中断标志 
-			
+			Read_DMP(&Pitch,&Roll,&Yaw);
 			if(dht11_flag)
 			{
 				BEEP=!BEEP;
